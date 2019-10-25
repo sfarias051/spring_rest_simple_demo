@@ -28,7 +28,7 @@ public class User {
     @NotNull
     @NotEmpty
     private String email;
-    //@CheckPassword
+    @CheckPassword
     private String password;
     private UUID token;
     private Date created;
