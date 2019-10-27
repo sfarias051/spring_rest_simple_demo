@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: server-discovery-naming-eureka
+server:
+  port: 8081
+eureka:
+  client:
+    fetch-registry: false
+    register-with-eureka: false
