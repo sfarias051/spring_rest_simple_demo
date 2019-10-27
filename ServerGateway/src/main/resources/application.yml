@@ -1,13 +1,8 @@
-server:
-  port: 8090
 spring:
-  h2:
-    console:
-      enabled: true
-  jpa:
-    show-sql: true
   application:
-    name: ws-demo-userapi
+    name: server-gateway-zuul
+server:
+  port: 8082
 eureka:
   client:
     service-url:

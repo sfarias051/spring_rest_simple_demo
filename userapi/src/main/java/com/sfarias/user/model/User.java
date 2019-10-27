@@ -2,10 +2,7 @@ package com.sfarias.user.model;
 
 import com.sfarias.user.utils.validations.CheckEmail;
 import com.sfarias.user.utils.validations.CheckPassword;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -16,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
 public class User {
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -35,6 +32,7 @@ public class User {
     private Date updated;
     private Date lastLogin;
     private Boolean isActive;
+    private Integer port;
     @OneToMany(mappedBy = "user")
     private List<Phone> phones;
 }

@@ -8,7 +8,13 @@ import com.sfarias.user.utils.Constants;
 import com.sfarias.user.utils.ex.GeneralException;
 import com.sfarias.user.utils.ex.PhoneNotFoundException;
 import com.sfarias.user.utils.ex.UserNotFoundException;
+import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.netflix.ribbon.RibbonClient;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,14 +27,25 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@Log4j2
 @RequestMapping("users")
 public class UserController {
+
+    @Autowired
+    private Environment environment;
 
     @Autowired
     UserRepository userRepository;
 
     @Autowired
     PhoneRepository phoneRepository;
+
+    @GetMapping("/testload")
+    public String testLoadBalancer(){
+        String test = String.valueOf(Integer.parseInt(environment.getProperty("local.server.port")));
+        log.info("Test LoadBalancer on port {} ", test);
+        return test;
+    }
 
     @GetMapping("")
     public List<?> getAllUsers(){
@@ -47,6 +64,8 @@ public class UserController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}").buildAndExpand(
                         savedUser.getId()).toUri();
+        user.setPort(Integer.parseInt(environment.getProperty("local.server.port")));
+        log.info("{}", savedUser);
         return ResponseEntity.created(location).body(savedUser);
     }
 
@@ -66,6 +85,8 @@ public class UserController {
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent())
             throw new UserNotFoundException("id-" + id);
+        user.get().setPort(Integer.parseInt(environment.getProperty("local.server.port")));
+        log.info("{}", user.get());
         return user.get();
     }
 
